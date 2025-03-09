@@ -1,0 +1,906 @@
+openapi: 3.0.3
+info:
+  title: Recipe Manager API
+  description: API for personal recipe management application
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+tags:
+  - name: Recipes
+    description: Recipe management endpoints
+  - name: Ingredients
+    description: Ingredient management endpoints
+  - name: Health
+    description: API health check
+
+paths:
+  /health:
+    get:
+      tags:
+        - Health
+      summary: Check API health
+      description: Returns the health status of the API
+      responses:
+        '200':
+          description: API is working correctly
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+  /recipes:
+    get:
+      tags:
+        - Recipes
+      summary: Get all recipes
+      description: Returns a list of all recipes
+      responses:
+        '200':
+          description: A list of recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Recipes
+      summary: Create a new recipe
+      description: Creates a new recipe with the given name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: Spaghetti Carbonara
+      responses:
+        '201':
+          description: Recipe created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /recipes/{id}:
+    get:
+      tags:
+        - Recipes
+      summary: Get a recipe by ID
+      description: Returns a recipe with the specified ID including its ingredients
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Recipe details with ingredients
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Recipe'
+                  - type: object
+                    properties:
+                      ingredients:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/RecipeIngredient'
+        '404':
+          description: Recipe not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Recipes
+      summary: Delete a recipe
+      description: Deletes a recipe with the specified ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Recipe deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Recipe deleted successfully
+                  recipe:
+                    $ref: '#/components/schemas/Recipe'
+        '404':
+          description: Recipe not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /recipes/{id}/rename:
+    patch:
+      tags:
+        - Recipes
+      summary: Rename a recipe
+      description: Updates the name of a recipe with the specified ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: Updated Spaghetti Carbonara
+      responses:
+        '200':
+          description: Recipe renamed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Recipe not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /recipes/{id}/favorite:
+    patch:
+      tags:
+        - Recipes
+      summary: Toggle favorite status
+      description: Toggles the favorite status of a recipe
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Favorite status toggled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '404':
+          description: Recipe not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /recipes/{id}/duplicate:
+    post:
+      tags:
+        - Recipes
+      summary: Duplicate a recipe
+      description: Creates a copy of a recipe with all its ingredients
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: Recipe duplicated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '404':
+          description: Recipe not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /recipes/{recipeId}/ingredients/{ingredientId}:
+    post:
+      tags:
+        - Recipes
+      summary: Add an ingredient to a recipe
+      description: Adds an ingredient to a recipe with optional amount and units
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  example: 2.5
+                units:
+                  type: string
+                  enum: [g, kg, oz, lb, ml, l, tsp, tbsp, cup, pint, quart, gallon, piece, slice, pinch, bunch, clove, "to taste"]
+                  example: cup
+      responses:
+        '201':
+          description: Ingredient added to recipe successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeIngredient'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Recipes
+      summary: Remove an ingredient from a recipe
+      description: Removes an ingredient from a recipe
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Ingredient removed from recipe successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Ingredient removed from recipe successfully
+                  recipeIngredient:
+                    $ref: '#/components/schemas/RecipeIngredient'
+        '404':
+          description: Recipe ingredient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /recipes/instock/all:
+    get:
+      tags:
+        - Recipes
+      summary: Get recipes with all ingredients in stock
+      description: Returns recipes where all ingredients are in stock
+      responses:
+        '200':
+          description: List of recipes with all ingredients in stock
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /recipes/instock/threshold/{threshold}:
+    get:
+      tags:
+        - Recipes
+      summary: Get recipes with ingredients missing at most the threshold
+      description: Returns recipes where at most the specified number of ingredients are not in stock
+      parameters:
+        - name: threshold
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Maximum number of ingredients that can be out of stock
+      responses:
+        '200':
+          description: List of recipes meeting the threshold criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/Recipe'
+                    - type: object
+                      properties:
+                        missing_count:
+                          type: integer
+                          description: Number of ingredients not in stock
+                          example: 1
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /recipes/missing-ingredients:
+    post:
+      tags:
+        - Recipes
+      summary: Get missing ingredients for recipes
+      description: Returns a list of ingredients that are not in stock for the specified recipes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - recipeIds
+              properties:
+                recipeIds:
+                  type: array
+                  items:
+                    type: integer
+                  example: [1, 2, 3]
+      responses:
+        '200':
+          description: List of missing ingredients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /ingredients:
+    get:
+      tags:
+        - Ingredients
+      summary: Get all ingredients
+      description: Returns a list of all ingredients
+      responses:
+        '200':
+          description: A list of ingredients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Ingredients
+      summary: Create a new ingredient
+      description: Creates a new ingredient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - category
+              properties:
+                name:
+                  type: string
+                  example: Tomato
+                category:
+                  type: string
+                  enum: [dairy, meat, produce, bakery, "canned goods", "dry goods", frozen, spices, condiments, beverages, other]
+                  example: produce
+      responses:
+        '201':
+          description: Ingredient created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ingredients/categories:
+    post:
+      tags:
+        - Ingredients
+      summary: Get ingredients by categories
+      description: Returns ingredients that belong to the specified categories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - categories
+              properties:
+                categories:
+                  type: array
+                  items:
+                    type: string
+                    enum: [dairy, meat, produce, bakery, "canned goods", "dry goods", frozen, spices, condiments, beverages, other]
+                  example: [produce, dairy]
+      responses:
+        '200':
+          description: List of ingredients in the specified categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /ingredients/{id}/rename:
+    patch:
+      tags:
+        - Ingredients
+      summary: Rename an ingredient
+      description: Updates the name of an ingredient
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: Cherry Tomato
+      responses:
+        '200':
+          description: Ingredient renamed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Ingredient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /ingredients/{id}:
+    delete:
+      tags:
+        - Ingredients
+      summary: Delete an ingredient
+      description: Deletes an ingredient with the specified ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Ingredient deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Ingredient deleted successfully
+                  ingredient:
+                    $ref: '#/components/schemas/Ingredient'
+        '404':
+          description: Ingredient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /ingredients/{id}/instock:
+    patch:
+      tags:
+        - Ingredients
+      summary: Update ingredient in-stock status
+      description: Updates whether an ingredient is in stock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - inStock
+              properties:
+                inStock:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: Ingredient in-stock status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Ingredient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /ingredients/bulk-instock:
+    patch:
+      tags:
+        - Ingredients
+      summary: Bulk update ingredient in-stock status
+      description: Updates the in-stock status for multiple ingredients
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ids
+                - inStock
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                  example: [1, 2, 3]
+                inStock:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: Ingredients in-stock status updated successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /ingredients/import:
+    post:
+      tags:
+        - Ingredients
+      summary: Import ingredients
+      description: Imports a list of ingredients, skipping duplicates
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ingredients
+              properties:
+                ingredients:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - category
+                    properties:
+                      name:
+                        type: string
+                        example: Tomato
+                      category:
+                        type: string
+                        enum: [dairy, meat, produce, bakery, "canned goods", "dry goods", frozen, spices, condiments, beverages, other]
+                        example: produce
+      responses:
+        '201':
+          description: Ingredients imported successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Spaghetti Carbonara
+        favorite:
+          type: boolean
+          example: false
+    
+    Ingredient:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Tomato
+        category:
+          type: string
+          enum: [dairy, meat, produce, bakery, "canned goods", "dry goods", frozen, spices, condiments, beverages, other]
+          example: produce
+        in_stock:
+          type: boolean
+          example: false
+    
+    RecipeIngredient:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        recipe_id:
+          type: integer
+          format: int64
+          example: 1
+        ingredient_id:
+          type: integer
+          format: int64
+          example: 2
+        seq:
+          type: integer
+          description: Display order of the ingredient
+          example: 1
+        amount:
+          type: number
+          nullable: true
+          example: 2.5
+        units:
+          type: string
+          nullable: true
+          enum: [g, kg, oz, lb, ml, l, tsp, tbsp, cup, pint, quart, gallon, piece, slice, pinch, bunch, clove, "to taste"]
+          example: cup
+        ingredient_name:
+          type: string
+          example: Tomato
+        category:
+          type: string
+          example: produce
+        in_stock:
+          type: boolean
+          example: false
+    
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Something went wrong

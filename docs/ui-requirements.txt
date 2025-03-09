@@ -1,0 +1,96 @@
+﻿UI Requirements for Recipe Manager
+General Requirements
+* The UI will be built using React
+* The UI will use Tailwind CSS for styling
+* The application must be responsive and work on mobile, tablet, and desktop devices
+* The UI will communicate with the existing Node.js API
+* The UI should cache data where appropriate to minimize API calls
+* The application should follow accessibility best practices (WCAG 2.1 AA standards)
+* Provide clear visual feedback for loading states and errors
+* Use a consistent color scheme and design language throughout the application
+Architecture Requirements
+* Implement a component-based architecture
+* Use React hooks for state management
+* Implement React Router for navigation
+* Use Axios for API communication
+* Implement service modules for API interactions
+* Include proper error handling for failed API requests
+Page/View Requirements
+Common Components
+* Header with navigation
+* Responsive sidebar/menu for mobile view
+* Loading spinner/indicator
+* Error message component
+* Confirmation dialog for destructive actions
+Recipe List View
+* Display all recipes in a grid or list view (toggle option)
+* Each recipe card should show:
+   * Recipe name
+   * Favorite status (visual indicator)
+   * Quick indicator showing if all ingredients are in stock
+* Filtering options:
+   * Show only favorites
+   * Show recipes with all ingredients in stock
+   * Show recipes with N or fewer missing ingredients
+* Sorting options:
+   * Alphabetical
+   * Favorites first
+* Search functionality to filter recipes by name
+Recipe Detail View
+* Display recipe name with edit option
+* Toggle for favorite status
+* List of ingredients with:
+   * Ingredient name
+   * Amount and units
+   * Category
+   * In-stock status (visual indicator)
+   * Ability to reorder ingredients
+* Add ingredient button/interface
+* Delete recipe button (with confirmation)
+* Duplicate recipe button
+* "Shopping list" feature that shows missing ingredients
+Ingredient Management View
+* List all ingredients with filters by category
+* Each ingredient should display:
+   * Name
+   * Category
+   * In-stock status (toggle)
+* Bulk operations:
+   * Select multiple ingredients
+   * Mark selected as in-stock/not in-stock
+* Add new ingredient form
+* Import ingredients from text interface
+* Search functionality to filter ingredients by name
+Shopping List View
+* Display missing ingredients needed for selected recipes
+* Group by category
+* Allow marking items as in-stock from this view
+* Option to share/export shopping list
+Interaction Requirements
+Recipe Management
+* Double-click recipe name to edit
+* Drag and drop support for reordering ingredients
+* Intuitive UI for adding/removing ingredients to recipes
+* Visual feedback when marking favorites
+Ingredient Management
+* One-click toggle for in-stock status
+* Batch operations for updating multiple ingredients
+* Simple form for adding new ingredients
+* Category dropdown should use the enum values from database
+Technical Requirements
+* The UI should be containerized using Docker as specified in the project structure
+* Use environment variables for API endpoints
+* Implement client-side form validation
+* Optimize for performance with React best practices
+* Include error boundaries to prevent UI crashes
+* Use React.lazy and Suspense for code splitting
+Visual Design Guidelines
+* Use a clean, modern interface
+* Color-coding for status (in-stock, favorite, etc.)
+* Consistent use of icons throughout the application
+* Responsive design with breakpoints for mobile, tablet, and desktop
+* Support for dark/light mode preferred but not required
+Deployment and Infrastructure
+* UI should be served via Nginx as indicated in the project structure
+* Docker container should be optimized for production builds
+* Assets should be properly cached and optimized

@@ -1,0 +1,27 @@
+
+curl -X POST http://localhost:3000/api/recipes \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Spaghetti Carbonara"}'
+
+
+curl http://localhost:3000/api/recipes/1
+
+
+curl http://localhost:3000/api/recipes
+
+
+curl -X DELETE http://localhost:3000/api/recipes/1
+
+
+curl http://localhost:3000/health
+
+
+curl -X POST \
+  http://localhost:3000/api/ingredients \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "Tomato",
+    "category": "produce"
+  }'
+
+curl http://localhost:3000/api/ingredients

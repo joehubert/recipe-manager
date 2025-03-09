@@ -1,0 +1,59 @@
+.
+├── .DS_Store
+├── docs
+│   ├── api-requirements.txt
+│   ├── application-requirements.txt
+│   └── database-requirements.txt
+├── project_structure.txt
+├── recipe-manager
+│   ├── .env
+│   ├── .gitignore
+│   ├── README.md
+│   ├── api
+│   │   ├── .gitignore
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   └── src
+│   │       ├── app.js
+│   │       ├── controllers
+│   │       │   ├── ingredientController.js
+│   │       │   └── recipeController.js
+│   │       ├── middleware
+│   │       ├── models
+│   │       │   ├── ingredient.js
+│   │       │   ├── recipe.js
+│   │       │   └── recipeIngredient.js
+│   │       ├── routes
+│   │       │   ├── ingredientRoutes.js
+│   │       │   └── recipeRoutes.js
+│   │       ├── server.js
+│   │       └── utils
+│   │           └── db.js
+│   ├── database
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── init.sql
+│   │   ├── migrations
+│   │   │   └── 001_initial_schema.sql
+│   │   ├── scripts
+│   │   └── seeds
+│   ├── docker-compose.yml
+│   └── ui
+│       ├── .gitignore
+│       ├── Dockerfile
+│       ├── README.md
+│       ├── nginx.conf
+│       ├── package-lock.json
+│       ├── package.json
+│       ├── public
+│       └── src
+│           ├── assets
+│           ├── components
+│           ├── pages
+│           └── services
+└── setup
+    └── setup-dirs.sh
+
+22 directories, 35 files

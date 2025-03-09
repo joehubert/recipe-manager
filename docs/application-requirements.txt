@@ -1,0 +1,15 @@
+﻿Recipe Manager Application
+
+
+Requirements will be in these separate files:
+application-requirements.txt - this file
+database-requirements.txt - requirements for the database
+api-requirements.txt - requirements for the API
+ui-requirements.txt - requirements for the user interface front end. Not available yet.
+
+
+
+
+General Requirements
+* This is an app for personal use and no authentication is required.
+* There will be docker components for the database, API, and UI. Docker Compose will be used to launch the complete app.

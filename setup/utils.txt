@@ -1,0 +1,8 @@
+
+tree -I "tests|node_modules|dist|build|.git|all-source" -a > project_structure.txt
+
+#zip -r docker.zip ./db ./docker ./monitoring ./src ./frontend ./htmx-templates .env docker-compose.yml docker-compose.test.yml jest.config.js package.json package-lock.json
+
+psql -h localhost -U postgres -d array_banking_trial
+
+./copy-source.sh

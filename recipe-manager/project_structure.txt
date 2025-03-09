@@ -1,0 +1,57 @@
+.
+├── .DS_Store
+├── .env
+├── .gitignore
+├── README.md
+├── api
+│   ├── .gitignore
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── docs
+│   │   ├── curls.txt
+│   │   └── openapi.yml
+│   ├── package-lock.json
+│   ├── package.json
+│   └── src
+│       ├── app.js
+│       ├── controllers
+│       │   ├── ingredientController.js
+│       │   └── recipeController.js
+│       ├── middleware
+│       ├── models
+│       │   ├── ingredient.js
+│       │   ├── recipe.js
+│       │   └── recipeIngredient.js
+│       ├── routes
+│       │   ├── ingredientRoutes.js
+│       │   └── recipeRoutes.js
+│       ├── server.js
+│       └── utils
+│           └── db.js
+├── copy-source.sh
+├── database
+│   ├── .DS_Store
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── init.sql
+│   ├── migrations
+│   │   └── 001_initial_schema.sql
+│   ├── scripts
+│   └── seeds
+├── docker-compose.yml
+├── project_structure.txt
+└── ui
+    ├── .gitignore
+    ├── Dockerfile
+    ├── README.md
+    ├── nginx.conf
+    ├── package-lock.json
+    ├── package.json
+    ├── public
+    └── src
+        ├── assets
+        ├── components
+        ├── pages
+        └── services
+
+20 directories, 35 files

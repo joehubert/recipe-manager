@@ -1,0 +1,21 @@
+﻿Database Requirements
+
+
+* Postgresql will be used
+* Tables will include
+   * recipe
+   * ingredient
+   * recipe_ingredient
+* all tables need auto-generated primary key IDs
+* recipe table has fields
+   * name - string
+   * favorite - boolean
+* ingredient table has fields
+   * name - string
+   * category (enumerated list of strings)
+   * in_stock - boolean
+* recipe_ingredient table includes fields
+   * PK and FK to recipe, ingredient
+   * seq - integer indicating display order of ingredients
+   * amount - numeric
+   * units - enumerated string

@@ -1,0 +1,27 @@
+﻿API Requirements
+
+
+* The API will be written in node.js
+* This is a personal app and authentication won’t be required.
+* The API will support these interactions:
+   * recipe
+      * create a new recipe
+      * rename a recipe
+      * delete a recipe
+      * add ingredient to recipe
+      * remove ingredient from recipe
+      * duplicate recipe
+      * mark/unmark recipe as favorite
+      * get all recipes
+      * return recipes where all ingredients are in stock
+      * return recipes where all but (passed threshold number) ingredients are in stock. iow, return recipes where all but two ingredients are in stock.
+      * given a list of recipe IDs, provide a list of ingredients that are not in stock
+   * ingredient
+      * create a new ingredient
+      * rename an ingredient
+      * delete an ingredient
+      * get all ingredients
+      * get all ingredients given a set of ingredient categories
+      * flag an ingredient as in stock, not in stock
+      * flag a range of ingredient IDs as in stock or not in stock
+      * import and add a list of ingredients in text category, name format, skipping duplicates with existing ingredients
