@@ -176,5 +176,6 @@ const ImportIngredientsModal = ({ isOpen, onClose, onImport, categoryOptions }) 
             </div>
         </div>
     );
+};
 
-    export default ImportIngredientsModal;
+export default ImportIngredientsModal;

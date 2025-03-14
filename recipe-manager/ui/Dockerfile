@@ -9,6 +9,10 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# React Scripts (which uses webpack under the hood) is trying to use a hash function 
+# that's no longer supported by default in newer Node.js versions with OpenSSL 3.0.
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
 # Build the application
 RUN npm run build
 
